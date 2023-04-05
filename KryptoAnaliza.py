@@ -1,22 +1,8 @@
 import pandas as pd
 from collections import Counter
 
-# name the .csv file as data.csv
-data = pd.read_csv('data.csv')
 
-
-def decode(matches, toDecode, decoded):
-    timesReplaced = []
-    for k, v in matches.items():
-        if k in toDecode.split(' ') and k not in timesReplaced:
-            toDecode = toDecode.replace(k, v)
-            timesReplaced.append(v)
-    if toDecode == decoded:
-        return True
-    return False, toDecode
-
-
-def main(data, checks=100_000):
+def getMatches(data, checks=100_000):
     matches = {}
     for index, row in data.iterrows():
         cipher = row['cipher'].split(' ')
@@ -29,6 +15,17 @@ def main(data, checks=100_000):
             break
     print('-' * 50)
     return matches
+
+
+def decode(matches, toDecode, decoded):
+    timesReplaced = []
+    for k, v in matches.items():
+        if k in toDecode.split(' ') and k not in timesReplaced:
+            toDecode = toDecode.replace(k, v)
+            timesReplaced.append(v)
+    if toDecode == decoded:
+        return True
+    return False, toDecode
 
 
 def CheckCorrect(matches, checks):
@@ -56,7 +53,10 @@ def ManualCheck(matches, checks, test1):
     return isCorrectList
 
 
-matches = main(data, 100_000)
+# name the .csv file as data.csv
+data = pd.read_csv('data.csv')
+
+matches = getMatches(data, 50_000)
 
 test1 = ['YIR OPYAIPL HUDBYRXNPF OYWXFL SVWPB DMQUI BEVYTL BQXOJIYD',
          'IITXIO AIDBRJJ RCTVYXIOT FJMXMOM BIEFJNTX WHDSTMF NWUGTL ZRPWT',
@@ -66,8 +66,12 @@ test1 = ['YIR OPYAIPL HUDBYRXNPF OYWXFL SVWPB DMQUI BEVYTL BQXOJIYD',
          'XVELIIY UVCSWT SYLDATLFE BOKWCN XZO NMSZITUL STWFTQFXZAS ZFGF']
 
 # uncomment the next line for checking if the matches are correct in the data.csv file
-print(Counter(CheckCorrect(matches, 100)))
-# list1 = ManualCheck(matches, 6, test1)
+# print(Counter(CheckCorrect(matches, 100)))
+#
+# # uncomment the next 6 lines for checking if the matches are correct in the test1 list
+list1 = ManualCheck(matches, 6, test1)
 
-# for x in list1:
-#     print(x)
+print('-' * 50)
+
+for x in list1:
+    print(x)
